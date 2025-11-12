@@ -18,7 +18,7 @@ Make sure you are using **Node.js v20.19.0** and **Yarn** as package manager.
 ### 1. Clone the Repository
 
 ```bash
-git clone <your-repo-url>
+git clone git@github.com:imhussein/real_time_trading.git
 cd real_time_trading
 cd backend && yarn install
 cd ../frontend && yarn install
