@@ -1,0 +1,28 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: frontend-route
+  namespace: default
+spec:
+  entryPoints:
+    - web
+    - websecure
+  routes:
+    - kind: Rule
+      match: Host(`realtime-trrading.com`) && PathPrefix(`/`)
+      services:
+        - name: frontend-svc
+          port: 3000
+      middlewares:
+        - name: redirect-to-https
+          namespace: default
+    - kind: Rule
+      match: Host(`www.realtime-trrading.com`) && PathPrefix(`/`)
+      services:
+        - name: frontend-svc
+          port: 3000
+      middlewares:
+        - name: redirect-to-https
+          namespace: default
+  tls:
+    secretName: realtime-trrading-com-tls

@@ -1,0 +1,20 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: backend-route
+  namespace: default
+spec:
+  entryPoints:
+    - web        # handles http
+    - websecure  # handles https
+  routes:
+    - match: Host(`api.realtimetrading.com`) && PathPrefix(`/`)
+      kind: Rule
+      services:
+        - name: backend-svc
+          port: 4001
+      middlewares:
+        - name: redirect-to-https
+          namespace: default
+  tls:
+    secretName: api-realtimetrading-com-tls
