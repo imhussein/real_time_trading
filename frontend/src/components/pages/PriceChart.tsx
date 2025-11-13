@@ -28,57 +28,56 @@ export default function PriceChart() {
     select: (response: HistoricalResponse) =>
       response.data.map((d, index) => ({
         ts: new Date(d.ts).toLocaleTimeString(),
-        price: d.close + Math.sin(index / 2) * 2.4, // i made this for bar Curve as the flucation we do in backend is quite small so i wanted the bar to show like an obvios flucation curve
+        price: d.close + Math.sin(index / 2) * 2.4, // added curve effect
       })),
   });
 
   useEffect(() => {
-    if (data) {
-      setChartData(data);
-    }
+    if (data) setChartData(data);
   }, [data]);
 
-  // Thsi can also be derived state based on new react compiler 19 which suggest to move sync calls outside useEffect and we can also prepare this in backend as part of this response
+  // sync incoming realtime price updates
   useEffect(() => {
     if (selected && prices[selected]) {
       setChartData((prev) => [
         ...prev.slice(-39),
-        {
-          ts: new Date().toLocaleTimeString(),
-          price: prices[selected].price,
-        },
+        { ts: new Date().toLocaleTimeString(), price: prices[selected].price },
       ]);
     }
   }, [prices, selected]);
 
   if (!selected)
     return (
-      <div className="flex h-full items-center justify-center text-gray-500">
-        Select or click a ticker on the sidebar to view its chart
+      <div className="flex h-full items-center justify-center text-gray-500 text-sm md:text-base">
+        Select a ticker from the sidebar to view its chart
       </div>
     );
 
   if (isLoading)
     return (
-      <div className="flex h-full items-center justify-center text-gray-400">
-        Loading chart view of the ticker...
+      <div className="flex h-full items-center justify-center text-gray-400 text-sm md:text-base">
+        Loading chart data...
       </div>
     );
 
   return (
-    <div className="w-full h-[580px] bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
-      <h2 className="text-lg font-semibold mb-3 text-gray-800">
+    <div
+      className="
+        w-full h-[420px] sm:h-[500px] lg:h-[580px] bg-white p-4 sm:p-5 rounded-xl border border-gray-200 shadow-sm transition-all duration-200"
+    >
+      <h2 className="text-base sm:text-lg font-semibold mb-3 text-gray-800">
         {selected} — Real-Time Price
       </h2>
-      <div className="h-[500px]">
-        {/**I have used this because this package of the chart expect the parent to have a explicit height set to it so to infer px height i use is usefull tiny library*/}
+
+      <div className="h-[360px] sm:h-[460px]">
+        {/* AutoSizer is needed because recharts requires explicit container height */}
         <AutoSizer>
           {({ height, width }) => (
             <ResponsiveContainer width={width} height={height}>
               <LineChart data={chartData}>
                 <CartesianGrid stroke="#E5E7EB" strokeDasharray="3 3" />
-                <XAxis dataKey="ts" tick={{ fill: "#6B7280", fontSize: 11 }} />
-                <YAxis tick={{ fill: "#6B7280", fontSize: 11 }} />
+                <XAxis dataKey="ts" tick={{ fill: "#6B7280", fontSize: 10 }} />
+                <YAxis tick={{ fill: "#6B7280", fontSize: 10 }} />
                 <Tooltip
                   contentStyle={{
                     background: "#fff",

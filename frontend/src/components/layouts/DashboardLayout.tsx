@@ -10,12 +10,25 @@ export default function DashboardLayout({
   main,
 }: DashboardLayoutProps) {
   return (
-    <div className="flex flex-col sm:flex-row h-screen bg-gray-50 text-gray-900">
-      <aside className="w-full sm:w-64 border-b sm:border-b-0 sm:border-r border-gray-200 bg-white shadow-sm">
+    <div
+      className="
+        grid min-h-dvh bg-gray-50 text-gray-900
+        grid-rows-[auto_1fr] lg:grid-rows-1
+        lg:grid-cols-[16rem_1fr]
+      "
+    >
+      {/* Sidebar */}
+      <aside
+        className="
+          bg-white border-b lg:border-b-0 lg:border-r border-gray-200 shadow-sm max-h-[40vh] overflow-y-auto lg:max-h-dvh lg:sticky lg:top-0"
+      >
         {sidebar}
       </aside>
 
-      <main className="flex-1 p-6 overflow-y-auto bg-white">{main}</main>
+      {/* Main */}
+      <main className=" bg-white overflow-y-auto p-4 sm:p-6 min-h-0">
+        {main}
+      </main>
     </div>
   );
 }
